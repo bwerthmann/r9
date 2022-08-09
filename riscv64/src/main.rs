@@ -17,8 +17,20 @@ mod uart16550;
 #[cfg(not(test))]
 core::arch::global_asm!(include_str!("l.S"));
 
+extern "C" {
+    fn sbss();
+    fn end();
+}
+
+pub fn clear_bss() {
+    unsafe {
+        core::slice::from_raw_parts_mut(sbss as *mut usize, end as usize - sbss as usize).fill(0);
+    }
+}
+
 #[no_mangle]
 pub extern "C" fn main9(hartid: usize, opaque: usize) -> ! {
+    clear_bss();
     devcons::init();
     println!();
     println!("r9 from the Internet");
