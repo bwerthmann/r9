@@ -31,7 +31,8 @@ impl Uart16550 {
         Uart16550 { base_address }
     }
 
-    pub fn init(&mut self, baud: u32) {
+    pub fn init(&mut self, base_address: usize, baud: u32) {
+        self.base_address = base_address;
         let ptr = self.base_address as *mut u8;
         unsafe {
             let lcr = 3; // word length

@@ -3,10 +3,12 @@
 use crate::uart16550::Uart16550;
 use port::devcons::Console;
 
-pub fn init() {
-    static mut UART: Uart16550 = Uart16550::new(0x1000_0000);
+// use 0x10000000 as default
+static mut UART: Uart16550 = Uart16550::new(0x10000000);
+
+pub fn init(bse_address: usize) {
     unsafe {
-        UART.init(115_200);
+        UART.init(bse_address, 115_200);
     }
     Console::new(unsafe { &mut UART });
 }

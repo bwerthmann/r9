@@ -29,12 +29,21 @@ pub fn clear_bss() {
 }
 
 #[no_mangle]
-pub extern "C" fn main9(hartid: usize, opaque: usize) -> ! {
+pub extern "C" fn main9(_hartid: usize, fdt_adr: usize) -> ! {
     clear_bss();
-    devcons::init();
+    let fdt = unsafe { fdt::Fdt::from_ptr(fdt_adr as *const u8).unwrap() };
+
+    if let Some(uart) = fdt.find_node("/soc/uart") {
+        if let Some(mut mreg) = uart.reg() {
+            // for now we use the first uart we find
+            if let Some(adr) = mreg.next() {
+                devcons::init(adr.starting_address as usize);
+                println!("uart at {:#x}", adr.starting_address as usize);
+            }
+        }
+    }
     println!();
     println!("r9 from the Internet");
-    println!("Domain0 Boot HART = {}, Domain0 Next Arg1 = {:#x}", hartid, opaque);
     #[cfg(not(test))]
     sbi::shutdown();
     #[cfg(test)]
