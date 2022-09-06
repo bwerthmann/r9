@@ -12,7 +12,7 @@ use port::println;
 mod devcons;
 mod runtime;
 mod sbi;
-mod uart16550;
+mod sbiuart;
 
 #[cfg(not(test))]
 core::arch::global_asm!(include_str!("l.S"));
@@ -29,21 +29,13 @@ pub fn clear_bss() {
 }
 
 #[no_mangle]
-pub extern "C" fn main9(_hartid: usize, fdt_adr: usize) -> ! {
+pub extern "C" fn main9(hartid: usize, fdt_adr: *const u8) -> ! {
     clear_bss();
-    let fdt = unsafe { fdt::Fdt::from_ptr(fdt_adr as *const u8).unwrap() };
-
-    if let Some(uart) = fdt.find_node("/soc/uart") {
-        if let Some(mut mreg) = uart.reg() {
-            // for now we use the first uart we find
-            if let Some(adr) = mreg.next() {
-                devcons::init(adr.starting_address as usize);
-                println!("uart at {:#x}", adr.starting_address as usize);
-            }
-        }
-    }
+    devcons::init();
     println!();
     println!("r9 from the Internet");
+    println!("dtb at {:#x}", fdt_adr as usize);
+    println!("hartid {}", hartid);
     #[cfg(not(test))]
     sbi::shutdown();
     #[cfg(test)]

@@ -1,14 +1,10 @@
 // Racy to start.
 
-use crate::uart16550::Uart16550;
+use crate::sbiuart::sbiuart;
 use port::devcons::Console;
 
-// use 0x10000000 as default
-static mut UART: Uart16550 = Uart16550::new(0x10000000);
+static mut UART: sbiuart = sbiuart::new();
 
-pub fn init(bse_address: usize) {
-    unsafe {
-        UART.init(bse_address, 115_200);
-    }
+pub fn init() {
     Console::new(unsafe { &mut UART });
 }

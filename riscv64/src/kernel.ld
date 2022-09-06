@@ -8,7 +8,7 @@ SECTIONS {
 	 *
 	 * OpenSBI expects us to start at 0x80200000 
 	 */
-	. = 0x80200000;
+	. = 0x40200000;
 	.text : ALIGN(4096) {
 		*(.text.entry)
 		*(.text*)
