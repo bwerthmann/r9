@@ -31,6 +31,7 @@ struct BuildParams {
     profile: Profile,
     verbose: bool,
     wait_for_gdb: bool,
+    features: String,
 }
 
 impl BuildParams {
@@ -40,8 +41,20 @@ impl BuildParams {
         let verbose = matches.contains_id("verbose");
         let arch = matches.try_get_one("arch").ok().flatten().unwrap_or(&Arch::X86_64);
         let wait_for_gdb = matches.try_contains_id("gdb").unwrap_or(false);
+        let features: String = matches
+            .try_get_one::<String>("features")
+            .ok()
+            .flatten()
+            .unwrap_or(&"virt".to_string())
+            .clone();
 
-        Self { arch: *arch, profile: profile, verbose: verbose, wait_for_gdb: wait_for_gdb }
+        Self {
+            arch: *arch,
+            profile: profile,
+            verbose: verbose,
+            wait_for_gdb: wait_for_gdb,
+            features: features,
+        }
     }
 
     fn dir(&self) -> &'static str {
@@ -54,6 +67,10 @@ impl BuildParams {
     fn add_build_arg(&self, cmd: &mut Command) {
         if let Profile::Release = self.profile {
             cmd.arg("--release");
+        };
+        if !self.features.is_empty() {
+            cmd.arg("--no-default-features");
+            cmd.arg("--features").arg(self.features.clone());
         }
     }
 
@@ -86,6 +103,9 @@ fn main() {
                 clap::arg!(--arch <arch> "Target architecture")
                     .value_parser(clap::builder::EnumValueParser::<Arch>::new()),
                 clap::arg!(--verbose "Print commands"),
+                clap::arg!(--features <features> "Set compile features")
+                    .required(false)
+                    .value_parser(clap::value_parser!(String)),
             ]),
         )
         .subcommand(
@@ -133,6 +153,9 @@ fn main() {
                     .value_parser(clap::builder::EnumValueParser::<Arch>::new()),
                 clap::arg!(--gdb "Wait for gdb connection on start"),
                 clap::arg!(--verbose "Print commands"),
+                clap::arg!(--features <features> "Set compile features")
+                    .required(false)
+                    .value_parser(clap::value_parser!(String)),
             ]),
         )
         .subcommand(
