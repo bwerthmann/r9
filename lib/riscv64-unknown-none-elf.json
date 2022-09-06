@@ -14,11 +14,5 @@
 	"max-atomic-width": 64,
 	"panic-strategy": "abort",
 	"relocation-model": "static",
-	"target-pointer-width": "64",
-	"pre-link-args": {
-		"ld.lld": [
-			"-Triscv64/src/kernel.ld",
-			"-nostdlib"
-		]
-	}
+	"target-pointer-width": "64"
 }

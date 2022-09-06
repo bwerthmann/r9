@@ -3,6 +3,11 @@ name = "riscv64"
 version = "0.1.0"
 edition = "2021"
 
+[features]
+default = ["virt"]
+virt = []
+nezha = []
+
 [dependencies]
 fdt = "0.1.4"
 riscv = "0.8.0"
