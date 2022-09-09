@@ -1,7 +1,12 @@
-#![feature(alloc_error_handler)]
-#![feature(asm_const)]
-#![feature(asm_sym)]
-#![feature(panic_info_message)]
+#![feature(
+    alloc_error_handler,
+    asm_const,
+    asm_sym,
+    fn_align,
+    naked_functions,
+    panic_info_message,
+    stmt_expr_attributes
+)]
 #![cfg_attr(not(any(test, feature = "cargo-clippy")), no_std)]
 #![cfg_attr(not(test), no_main)]
 #![allow(clippy::upper_case_acronyms)]
