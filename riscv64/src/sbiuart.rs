@@ -17,7 +17,7 @@ impl Write for sbiuart {
 
 impl Uart for sbiuart {
     fn putb(&self, b: u8) {
-        crate::sbi::_consputb(b);
+        crate::sbi::consputb(b);
     }
 }
 

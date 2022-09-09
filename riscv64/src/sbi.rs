@@ -39,7 +39,7 @@ pub fn _set_timer(timer: usize) {
 }
 
 #[deprecated = "expected to be deprecated; no replacement"]
-pub fn _consputb(c: u8) {
+pub fn consputb(c: u8) {
     sbi_call_legacy(SBI_CONSOLE_PUTCHAR, c as usize, 0, 0);
 }
 
