@@ -10,5 +10,5 @@ nezha = []
 
 [dependencies]
 fdt = "0.1.4"
-riscv = "0.8.0"
 port = { path = "../port" }
+riscv = "0.8.0"

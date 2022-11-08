@@ -36,10 +36,17 @@ struct BuildParams {
 
 impl BuildParams {
     fn new(matches: &clap::ArgMatches) -> Self {
-        let profile =
-            if matches.contains_id("release") { Profile::Release } else { Profile::Debug };
+        let profile = if matches.contains_id("release") {
+            Profile::Release
+        } else {
+            Profile::Debug
+        };
         let verbose = matches.contains_id("verbose");
-        let arch = matches.try_get_one("arch").ok().flatten().unwrap_or(&Arch::X86_64);
+        let arch = matches
+            .try_get_one("arch")
+            .ok()
+            .flatten()
+            .unwrap_or(&Arch::X86_64);
         let wait_for_gdb = matches.try_contains_id("gdb").unwrap_or(false);
         let features: String = matches
             .try_get_one::<String>("features")
@@ -109,31 +116,37 @@ fn main() {
             ]),
         )
         .subcommand(
-            clap::Command::new("expand").about("Expands r9 macros").args(&[
-                clap::arg!(--release "Build release version").conflicts_with("debug"),
-                clap::arg!(--debug "Build debug version (default)").conflicts_with("release"),
-                clap::arg!(--arch <arch> "Target architecture")
-                    .value_parser(clap::builder::EnumValueParser::<Arch>::new()),
-                clap::arg!(--verbose "Print commands"),
-            ]),
+            clap::Command::new("expand")
+                .about("Expands r9 macros")
+                .args(&[
+                    clap::arg!(--release "Build release version").conflicts_with("debug"),
+                    clap::arg!(--debug "Build debug version (default)").conflicts_with("release"),
+                    clap::arg!(--arch <arch> "Target architecture")
+                        .value_parser(clap::builder::EnumValueParser::<Arch>::new()),
+                    clap::arg!(--verbose "Print commands"),
+                ]),
         )
         .subcommand(
-            clap::Command::new("kasm").about("Emits r9 assembler").args(&[
-                clap::arg!(--release "Build release version").conflicts_with("debug"),
-                clap::arg!(--debug "Build debug version (default)").conflicts_with("release"),
-                clap::arg!(--arch <arch> "Target architecture")
-                    .value_parser(clap::builder::EnumValueParser::<Arch>::new()),
-                clap::arg!(--verbose "Print commands"),
-            ]),
+            clap::Command::new("kasm")
+                .about("Emits r9 assembler")
+                .args(&[
+                    clap::arg!(--release "Build release version").conflicts_with("debug"),
+                    clap::arg!(--debug "Build debug version (default)").conflicts_with("release"),
+                    clap::arg!(--arch <arch> "Target architecture")
+                        .value_parser(clap::builder::EnumValueParser::<Arch>::new()),
+                    clap::arg!(--verbose "Print commands"),
+                ]),
         )
         .subcommand(
-            clap::Command::new("dist").about("Builds a multibootable r9 image").args(&[
-                clap::arg!(--release "Build a release version").conflicts_with("debug"),
-                clap::arg!(--debug "Build a debug version").conflicts_with("release"),
-                clap::arg!(--arch <arch> "Target architecture")
-                    .value_parser(clap::builder::EnumValueParser::<Arch>::new()),
-                clap::arg!(--verbose "Print commands"),
-            ]),
+            clap::Command::new("dist")
+                .about("Builds a multibootable r9 image")
+                .args(&[
+                    clap::arg!(--release "Build a release version").conflicts_with("debug"),
+                    clap::arg!(--debug "Build a debug version").conflicts_with("release"),
+                    clap::arg!(--arch <arch> "Target architecture")
+                        .value_parser(clap::builder::EnumValueParser::<Arch>::new()),
+                    clap::arg!(--verbose "Print commands"),
+                ]),
         )
         .subcommand(clap::Command::new("test").about("Runs unit tests").args(&[
             clap::arg!(--release "Build a release version").conflicts_with("debug"),
@@ -146,27 +159,31 @@ fn main() {
             clap::arg!(--verbose "Print commands"),
         ]))
         .subcommand(
-            clap::Command::new("qemu").about("Run r9 under QEMU").args(&[
-                clap::arg!(--release "Build a release version").conflicts_with("debug"),
-                clap::arg!(--debug "Build a debug version").conflicts_with("release"),
-                clap::arg!(--arch <arch> "Target architecture")
-                    .value_parser(clap::builder::EnumValueParser::<Arch>::new()),
-                clap::arg!(--gdb "Wait for gdb connection on start"),
-                clap::arg!(--verbose "Print commands"),
-                clap::arg!(--features <features> "Set compile features")
-                    .required(false)
-                    .value_parser(clap::value_parser!(String)),
-            ]),
+            clap::Command::new("qemu")
+                .about("Run r9 under QEMU")
+                .args(&[
+                    clap::arg!(--release "Build a release version").conflicts_with("debug"),
+                    clap::arg!(--debug "Build a debug version").conflicts_with("release"),
+                    clap::arg!(--arch <arch> "Target architecture")
+                        .value_parser(clap::builder::EnumValueParser::<Arch>::new()),
+                    clap::arg!(--gdb "Wait for gdb connection on start"),
+                    clap::arg!(--verbose "Print commands"),
+                    clap::arg!(--features <features> "Set compile features")
+                        .required(false)
+                        .value_parser(clap::value_parser!(String)),
+                ]),
         )
         .subcommand(
-            clap::Command::new("qemukvm").about("Run r9 under QEMU with KVM").args(&[
-                clap::arg!(--release "Build a release version").conflicts_with("debug"),
-                clap::arg!(--debug "Build a debug version").conflicts_with("release"),
-                clap::arg!(--arch <arch> "Target architecture")
-                    .value_parser(clap::builder::EnumValueParser::<Arch>::new()),
-                clap::arg!(--gdb "Wait for gdb connection on start"),
-                clap::arg!(--verbose "Print commands"),
-            ]),
+            clap::Command::new("qemukvm")
+                .about("Run r9 under QEMU with KVM")
+                .args(&[
+                    clap::arg!(--release "Build a release version").conflicts_with("debug"),
+                    clap::arg!(--debug "Build a debug version").conflicts_with("release"),
+                    clap::arg!(--arch <arch> "Target architecture")
+                        .value_parser(clap::builder::EnumValueParser::<Arch>::new()),
+                    clap::arg!(--gdb "Wait for gdb connection on start"),
+                    clap::arg!(--verbose "Print commands"),
+                ]),
         )
         .subcommand(clap::Command::new("clean").about("Cargo clean"))
         .get_matches();
@@ -226,7 +243,8 @@ fn build(build_params: &BuildParams) -> Result<()> {
     cmd.arg("build");
     #[rustfmt::skip]
     cmd.arg("-Z").arg("build-std=core,alloc");
-    cmd.arg("--target").arg(format!("lib/{}.json", build_params.target()));
+    cmd.arg("--target")
+        .arg(format!("lib/{}.json", build_params.target()));
     cmd.arg("--workspace");
     cmd.arg("--exclude").arg("xtask");
     exclude_other_arches(build_params.arch, &mut cmd);
@@ -246,8 +264,10 @@ fn expand(build_params: &BuildParams) -> Result<()> {
     cmd.current_dir(workspace());
     cmd.arg("rustc");
     cmd.arg("-Z").arg("build-std=core,alloc");
-    cmd.arg("-p").arg(build_params.arch.to_string().to_lowercase());
-    cmd.arg("--target").arg(format!("lib/{}.json", build_params.target()));
+    cmd.arg("-p")
+        .arg(build_params.arch.to_string().to_lowercase());
+    cmd.arg("--target")
+        .arg(format!("lib/{}.json", build_params.target()));
     cmd.arg("--");
     cmd.arg("-Z").arg("unpretty=expanded");
     build_params.add_build_arg(&mut cmd);
@@ -266,8 +286,10 @@ fn kasm(build_params: &BuildParams) -> Result<()> {
     cmd.current_dir(workspace());
     cmd.arg("rustc");
     cmd.arg("-Z").arg("build-std=core,alloc");
-    cmd.arg("-p").arg(build_params.arch.to_string().to_lowercase());
-    cmd.arg("--target").arg(format!("lib/{}.json", build_params.target()));
+    cmd.arg("-p")
+        .arg(build_params.arch.to_string().to_lowercase());
+    cmd.arg("--target")
+        .arg(format!("lib/{}.json", build_params.target()));
     cmd.arg("--").arg("--emit").arg("asm");
     build_params.add_build_arg(&mut cmd);
     if build_params.verbose {
@@ -287,8 +309,16 @@ fn dist(build_params: &BuildParams) -> Result<()> {
         let mut cmd = Command::new(objcopy());
         cmd.arg("--input-target=elf64-x86-64");
         cmd.arg("--output-target=elf32-i386");
-        cmd.arg(format!("target/{}/{}/x86_64", build_params.target(), build_params.dir()));
-        cmd.arg(format!("target/{}/{}/r9.elf32", build_params.target(), build_params.dir()));
+        cmd.arg(format!(
+            "target/{}/{}/x86_64",
+            build_params.target(),
+            build_params.dir()
+        ));
+        cmd.arg(format!(
+            "target/{}/{}/r9.elf32",
+            build_params.target(),
+            build_params.dir()
+        ));
         cmd.current_dir(workspace());
         if build_params.verbose {
             println!("Executing {:?}", cmd);
@@ -349,7 +379,11 @@ fn run(build_params: &BuildParams) -> Result<()> {
             cmd.arg("-d");
             cmd.arg("int");
             cmd.arg("-kernel");
-            cmd.arg(format!("target/{}/{}/aarch64", build_params.target(), build_params.dir()));
+            cmd.arg(format!(
+                "target/{}/{}/aarch64",
+                build_params.target(),
+                build_params.dir()
+            ));
             cmd.current_dir(workspace());
             if build_params.verbose {
                 println!("Executing {:?}", cmd);
@@ -374,7 +408,11 @@ fn run(build_params: &BuildParams) -> Result<()> {
             }
             cmd.arg("-d").arg("guest_errors,unimp");
             cmd.arg("-kernel");
-            cmd.arg(format!("target/{}/{}/riscv64", build_params.target(), build_params.dir()));
+            cmd.arg(format!(
+                "target/{}/{}/riscv64",
+                build_params.target(),
+                build_params.dir()
+            ));
             cmd.current_dir(workspace());
             if build_params.verbose {
                 println!("Executing {:?}", cmd);
@@ -406,7 +444,11 @@ fn run(build_params: &BuildParams) -> Result<()> {
             //cmd.arg("-device");
             //cmd.arg("ide-hd,drive=sdahci0,bus=ahci0.0");
             cmd.arg("-kernel");
-            cmd.arg(format!("target/{}/{}/r9.elf32", build_params.target(), build_params.dir()));
+            cmd.arg(format!(
+                "target/{}/{}/r9.elf32",
+                build_params.target(),
+                build_params.dir()
+            ));
             cmd.current_dir(workspace());
             if build_params.verbose {
                 println!("Executing {:?}", cmd);
@@ -437,7 +479,11 @@ fn accelrun(build_params: &BuildParams) -> Result<()> {
         cmd.arg("-s").arg("-S");
     }
     cmd.arg("-kernel");
-    cmd.arg(format!("target/{}/{}/r9.elf32", build_params.target(), build_params.dir()));
+    cmd.arg(format!(
+        "target/{}/{}/r9.elf32",
+        build_params.target(),
+        build_params.dir()
+    ));
     cmd.current_dir(workspace());
     if build_params.verbose {
         println!("Executing {:?}", cmd);
@@ -450,7 +496,10 @@ fn accelrun(build_params: &BuildParams) -> Result<()> {
 }
 
 fn clean() -> Result<()> {
-    let status = Command::new(cargo()).current_dir(workspace()).arg("clean").status()?;
+    let status = Command::new(cargo())
+        .current_dir(workspace())
+        .arg("clean")
+        .status()?;
     if !status.success() {
         return Err("clean failed".into());
     }
@@ -458,7 +507,11 @@ fn clean() -> Result<()> {
 }
 
 fn workspace() -> PathBuf {
-    Path::new(&env!("CARGO_MANIFEST_DIR")).ancestors().nth(1).unwrap().to_path_buf()
+    Path::new(&env!("CARGO_MANIFEST_DIR"))
+        .ancestors()
+        .nth(1)
+        .unwrap()
+        .to_path_buf()
 }
 
 // Exclude architectures other than the one being built

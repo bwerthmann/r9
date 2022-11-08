@@ -1,10 +1,10 @@
 [workspace]
 members = [
-    "aarch64",
-    "x86_64",
-    "port",
-    "riscv64",
-    "xtask"
+  "aarch64",
+  "x86_64",
+  "port",
+  "riscv64",
+  "xtask",
 ]
 
 [profile.dev]

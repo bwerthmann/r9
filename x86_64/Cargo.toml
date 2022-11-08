@@ -5,5 +5,5 @@ edition = "2021"
 
 [dependencies]
 bitstruct = "0.1"
-x86 = "0.48"
 port = { path = "../port" }
+x86 = "0.48"

@@ -18,7 +18,12 @@ extern "C" fn eh_personality() {}
 fn panic(info: &PanicInfo) -> ! {
     print!("Panic: ");
     if let Some(p) = info.location() {
-        println!("line {}, file {}: {}", p.line(), p.file(), info.message().unwrap());
+        println!(
+            "line {}, file {}: {}",
+            p.line(),
+            p.file(),
+            info.message().unwrap()
+        );
     } else {
         println!("no information available.");
     }

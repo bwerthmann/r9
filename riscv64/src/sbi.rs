@@ -45,7 +45,9 @@ pub fn consputb(c: u8) {
 
 #[deprecated = "expected to be deprecated; no replacement"]
 pub fn _consgetb() -> u8 {
-    sbi_call_legacy(SBI_CONSOLE_GETCHAR, 0, 0, 0).try_into().unwrap()
+    sbi_call_legacy(SBI_CONSOLE_GETCHAR, 0, 0, 0)
+        .try_into()
+        .unwrap()
 }
 
 pub fn shutdown() -> ! {
